@@ -1,0 +1,5 @@
+# This directory will contain Python reference code:
+# - golden_model.py
+# - fixed_point utilities
+# - test vector generation
+# - output comparison scripts
