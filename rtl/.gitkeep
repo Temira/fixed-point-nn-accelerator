@@ -1,1 +1,8 @@
-
+# This directory will contain all SystemVerilog RTL modules:
+# - nn_top.sv
+# - control_fsm.sv
+# - mac_engine.sv
+# - input_buffer.sv
+# - weight_bias_mem.sv
+# - bias_relu_unit.sv
+# - output_buffer.sv
