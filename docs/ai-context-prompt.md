@@ -65,6 +65,17 @@ Important constraints:
 - Prefer clarity over performance optimization
 - Always explain reasoning when making design decisions
 
+Grading context:
+This project is evaluated primarily on clarity, modularity, correctness, and verification quality.
+
+The most important aspects are:
+- well-defined modules and interfaces
+- strong testbench design
+- correctness validated against a golden model
+- clear documentation and reproducibility
+
+The goal is not to build the most complex system, but the most well-structured and verifiable one.
+
 When helping me:
 - Be precise about signal behavior and timing
 - Clearly separate combinational vs sequential logic
