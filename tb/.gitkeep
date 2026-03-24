@@ -1,1 +1,5 @@
-
+# This directory will contain:
+# - module-level testbenches (tb_*.sv)
+# - top-level integration testbench
+# - test vectors (input, weights, expected outputs)
+# - simulation scripts
