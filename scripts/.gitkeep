@@ -1,0 +1,6 @@
+# This directory will contain helper scripts:
+# - run_sim.sh
+# - run_python_model.sh
+# - regression scripts
+
+# Scripts will automate reproducibility of results.
