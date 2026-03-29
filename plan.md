@@ -222,6 +222,14 @@ This avoids a single monolithic design and aligns with best practices for hardwa
 
 ---
 
+## Use of Existing AMD IP
+
+Because this project is implemented as a custom Vitis IP, existing AMD/Xilinx IP blocks may be used where appropriate to simplify system integration. In particular, standard infrastructure IP such as AXI4-Stream interfaces, AXI4-Lite control interfaces, FIFOs, and memory-related support blocks can be leveraged to handle communication and data movement.
+
+However, the core functionality of this project — the fixed-point dense-layer computation including the MAC engine, bias addition, ReLU activation, and control sequencing — will be implemented as custom RTL. This ensures that the key architectural and mathematical components remain fully specified, testable, and aligned with the learning objectives of the project.
+
+---
+
 ## Summary
 
 This project defines a modular, fixed-point neural network inference accelerator implemented as a custom Vitis IP. The design focuses on clear structure, well-defined interfaces, and hardware-appropriate computation, making it suitable for both implementation and verification within the project timeline.
