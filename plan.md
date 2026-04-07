@@ -56,25 +56,6 @@ for i in range(M):
         acc += W[i][j] * x[j]
     acc += b[i]
     y[i] = max(0, acc)
-
-## Mathematical Operations
-
-For each output element:
-
-1. Multiply input elements by weights
-2. Accumulate partial sums
-3. Add bias
-4. Apply ReLU activation
-
-Equivalent pseudocode:
-
-```python
-for i in range(M):
-    acc = 0
-    for j in range(N):
-        acc += W[i][j] * x[j]
-    acc += b[i]
-    y[i] = max(0, acc)
 ```
 
 ---
