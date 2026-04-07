@@ -3,9 +3,12 @@
 ## Project Team
 
 - Temira Koenig  
-- Would ideally like to work on this project on my own. Will discuss with professor. 
+- Zihao Zhang
 
 ---
+
+## Note:
+We may still increase the scope of this project. This is what we would like to build as of now, but we may change some things.
 
 ## 1. IP Definition
 
