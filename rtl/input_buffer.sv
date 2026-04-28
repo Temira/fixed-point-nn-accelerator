@@ -1,7 +1,7 @@
 module input_buffer #(
     parameter int DATA_W = 16,
     parameter int N      = 8,
-    parameter int ADDR_W = $clog2(N)
+    parameter int ADDR_W = (N <= 1) ? 1 : $clog2(N)
 )(
     input  logic                     clk,
     input  logic                     rst_n,
@@ -29,8 +29,6 @@ module input_buffer #(
         end
     end
 
-    always_comb begin
-        read_data = mem[read_addr];
-    end
+    assign read_data = mem[read_addr];
 
 endmodule

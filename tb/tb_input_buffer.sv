@@ -13,6 +13,7 @@ module tb_input_buffer;
     logic signed [DATA_W-1:0] write_data;
     logic [ADDR_W-1:0] read_addr;
     logic signed [DATA_W-1:0] read_data;
+    integer idx;
 
     input_buffer #(
         .DATA_W(DATA_W),
@@ -39,6 +40,25 @@ module tb_input_buffer;
         end
     endtask
 
+    task automatic write_word(
+        input logic [ADDR_W-1:0]        addr,
+        input logic signed [DATA_W-1:0] data
+    );
+        @(negedge clk);
+        write_en   = 1'b1;
+        write_addr = addr;
+        write_data = data;
+        @(posedge clk);
+    endtask
+
+    task automatic stop_write;
+        @(negedge clk);
+        write_en   = 1'b0;
+        write_addr = '0;
+        write_data = '0;
+        @(posedge clk);
+    endtask
+
     initial begin
         clk = 0;
         rst_n = 0;
@@ -50,40 +70,42 @@ module tb_input_buffer;
         #12;
         rst_n = 1;
 
-        // Write a few values
-        @(posedge clk);
-        write_en   <= 1;
-        write_addr <= 0;
-        write_data <= 16'sd10;
+        // Reset should clear all storage locations.
+        for (idx = 0; idx < N; idx++) begin
+            read_addr = idx[ADDR_W-1:0];
+            #1;
+            check_equal(read_data, '0, $sformatf("reset clears addr %0d", idx));
+        end
 
-        @(posedge clk);
-        write_addr <= 1;
-        write_data <= -16'sd3;
+        // Write a few values, including a negative sample.
+        write_word(0, 16'sd10);
+        write_word(1, -16'sd3);
+        write_word(7, 16'sd25);
+        stop_write();
 
-        @(posedge clk);
-        write_addr <= 7;
-        write_data <= 16'sd25;
-
-        @(posedge clk);
-        write_en <= 0;
-
-        // Read them back
+        // Read them back in non-sequential order.
         #1;
+        read_addr = 7; #1; check_equal(read_data, 16'sd25, "read addr 7");
         read_addr = 0; #1; check_equal(read_data, 16'sd10, "read addr 0");
         read_addr = 1; #1; check_equal(read_data, -16'sd3, "read addr 1");
-        read_addr = 7; #1; check_equal(read_data, 16'sd25, "read addr 7");
 
-        // Overwrite
-        @(posedge clk);
-        write_en   <= 1;
-        write_addr <= 1;
-        write_data <= 16'sd99;
+        // Unwritten addresses should still hold reset values.
+        read_addr = 2; #1; check_equal(read_data, '0, "unwritten addr remains zero");
 
-        @(posedge clk);
-        write_en <= 0;
+        // Overwrite and ensure only the targeted location changes.
+        write_word(1, 16'sd99);
+        stop_write();
 
         #1;
         read_addr = 1; #1; check_equal(read_data, 16'sd99, "overwrite addr 1");
+        read_addr = 0; #1; check_equal(read_data, 16'sd10, "other addr unaffected by overwrite");
+
+        // A second reset should clear previously written contents.
+        rst_n = 0;
+        #2;
+        read_addr = 0; #1; check_equal(read_data, '0, "second reset clears addr 0");
+        read_addr = 1; #1; check_equal(read_data, '0, "second reset clears addr 1");
+        rst_n = 1;
 
         $display("tb_input_buffer PASSED");
         $finish;
