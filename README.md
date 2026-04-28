@@ -61,6 +61,32 @@ The design is explicitly partitioned into logical blocks:
 
 The chosen architecture is a serial, time-multiplexed MAC datapath with a two-stage pipelined MAC core and an FSM-driven control path. That tradeoff reduces area and simplifies verification at the cost of latency. The architecture page explains how this partition supports unit testing, partial integration testing, and end-to-end top-level integration.
 
+## Efficiency Tradeoffs
+
+The implementation makes the area/throughput tradeoff explicit rather than hiding it:
+
+- one multiplier is reused across all `N` inputs and all `M` outputs
+- one accumulator is reused across all output neurons
+- the compute path is pipelined into multiply and accumulate stages to shorten the critical combinational path
+- the controller sequences work serially, which increases latency but keeps the datapath compact
+
+For the current baseline controller in [`rtl/controller_fsm.sv`](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator/rtl/controller_fsm.sv), the cycle budget is:
+
+- input load: `N` cycles
+- per output neuron: `1` reset + `N` feed cycles + `1` drain + `1` post-process + `1` writeback = `N + 4` cycles
+- output streaming: `M` cycles
+- completion pulse / return-to-idle overhead: `1` cycle
+
+So the baseline total is approximately:
+
+`cycles_per_inference = N + M * (N + 4) + M + 1`
+
+For the currently tested configuration `N = 4`, `M = 2`:
+
+`cycles_per_inference = 4 + 2 * (4 + 4) + 2 + 1 = 23 cycles`
+
+This is not a high-throughput architecture, but it is resource-efficient and easy to verify. That is the intended baseline tradeoff for this project.
+
 ## Verification Strategy
 
 The verification story is split into module-level checks, partial-datapath integration, control/compute verification, and end-to-end top-level evidence:

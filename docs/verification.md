@@ -60,6 +60,20 @@ For the included test vectors, the golden-model output is:
 
 For the included reference vector set, the top-level RTL output matches the golden-model output `[21, 0]`.
 
+## Performance Interpretation Before Synthesis
+
+Even before post-synthesis timing is available, the current RTL already shows the intended efficiency tradeoff:
+
+- the controller issues `M * N` MAC-enable pulses, which matches the expected number of multiply-accumulate operations
+- the compute core uses a two-stage pipeline, so multiplication and accumulation are separated across cycles
+- only one MAC datapath is instantiated, so hardware is reused across all outputs rather than replicated
+
+For the current baseline controller, the estimated cycle count per inference is:
+
+`cycles_per_inference = N + M * (N + 4) + M + 1`
+
+For the verified test configuration `N = 4`, `M = 2`, this gives `23` cycles per inference. This cycle model should be compared against post-synthesis clock frequency later to compute latency and throughput in physical time.
+
 ## Evidence Files Expected Before Final Submission
 
 The grader will not run the repo, so the following markdown pages are the primary submission-facing evidence locations:

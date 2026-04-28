@@ -135,6 +135,19 @@ The design is sequential:
 
 This deterministic structure simplifies verification.
 
+For the implemented baseline controller and serial MAC path, the cycle model can be made more explicit:
+
+- input loading takes `N` cycles
+- each output neuron takes `1` reset cycle, `N` feed cycles, `1` pipeline-drain cycle, `1` post-process cycle, and `1` writeback cycle
+- output streaming takes `M` cycles
+- completion adds approximately `1` final cycle
+
+This gives the baseline estimate:
+
+`cycles_per_inference = N + M * (N + 4) + M + 1`
+
+For the currently verified test configuration with `N = 4` and `M = 2`, this evaluates to `23` cycles per inference.
+
 ---
 
 ## Fixed-Point Considerations
@@ -159,6 +172,14 @@ Tradeoffs:
 - Higher latency
 
 This is appropriate for the project scope.
+
+In practical terms, the chosen serial baseline reuses:
+
+- one multiplier instead of `M` parallel multipliers
+- one accumulator instead of a bank of parallel accumulators
+- simple indexed buffers and parameter memory instead of a wider crossbar-style datapath
+
+The compute core still includes a two-stage pipeline, so the design does not maximize raw throughput, but it does reduce combinational depth relative to an unpipelined multiply-plus-add path.
 
 ---
 

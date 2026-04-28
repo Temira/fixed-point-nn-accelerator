@@ -27,9 +27,11 @@ This page is the submission-facing location for synthesis evidence. The grader w
 |---|---|---|
 | Achieved clock period | Pending | |
 | Fmax | Pending | |
-| Cycles per inference | Pending | include `M` and `N` assumptions |
-| Latency per inference | Pending | |
-| Throughput | Pending | vectors/sec or outputs/sec |
+| Cycles per inference | `N + M * (N + 4) + M + 1` | implemented baseline controller estimate |
+| Latency per inference | Pending | compute as `cycles_per_inference * achieved_clock_period` |
+| Throughput | Pending | compute as `1 / latency_per_inference` in vectors/sec |
+
+For the currently verified reference case `N = 4`, `M = 2`, the implemented controller implies `23` cycles per inference before synthesis timing is applied.
 
 ## Analysis Against Initial Goals
 
@@ -37,7 +39,7 @@ This page is the submission-facing location for synthesis evidence. The grader w
 |---|---|---|---|
 | Correct dense-layer datapath behavior | Pending | Pending | |
 | Modular implementation | Pending | Pending | |
-| Resource-efficient serial MAC architecture | Pending | Pending | |
+| Resource-efficient serial MAC architecture | Pending synthesis numbers | Pending | The RTL uses a single reused MAC datapath with a two-stage pipeline, so the qualitative area/throughput tradeoff is already established; synthesis is still needed for quantitative LUT/FF/DSP/BRAM evidence. |
 | Reproducible verification flow | Pending | Pending | |
 
 ## Required Final Attachments
