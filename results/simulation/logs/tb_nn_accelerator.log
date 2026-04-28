@@ -1,0 +1,8 @@
+mkdir -p build
+iverilog -g2012 -o build/tb_nn_accelerator rtl/input_buffer.sv rtl/weight_bias_mem.sv rtl/post_processing_unit.sv rtl/output_buffer.sv rtl/compute_core.sv rtl/controller_fsm.sv rtl/nn_accelerator.sv tb/tb_nn_accelerator.sv
+vvp build/tb_nn_accelerator
+PASS: top-level output 0 | got=21
+PASS: top-level output 1 | got=0
+PASS: streamed output count | got=2
+tb_nn_accelerator PASSED
+tb/tb_nn_accelerator.sv:114: $finish called at 255000 (1ps)

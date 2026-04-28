@@ -1,0 +1,9 @@
+mkdir -p build
+iverilog -g2012 -o build/tb_datapath_partial rtl/input_buffer.sv rtl/weight_bias_mem.sv rtl/post_processing_unit.sv rtl/output_buffer.sv tb/tb_datapath_partial.sv
+vvp build/tb_datapath_partial
+PASS: post-processed output neuron 0 | got=21
+PASS: post-processed output neuron 1 | got=0
+PASS: buffered output neuron 0 | got=21
+PASS: buffered output neuron 1 | got=0
+tb_datapath_partial PASSED
+tb/tb_datapath_partial.sv:184: $finish called at 98000 (1ps)

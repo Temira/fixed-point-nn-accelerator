@@ -1,0 +1,13 @@
+mkdir -p build
+iverilog -g2012 -o build/tb_post_processing_unit rtl/post_processing_unit.sv tb/tb_post_processing_unit.sv
+vvp build/tb_post_processing_unit
+PASS: disabled output forced to zero | got=0
+PASS: positive accumulation plus bias | got=13
+PASS: bias subtraction stays positive | got=6
+PASS: negative result clamps to zero | got=0
+PASS: positive overflow saturates | got=32767
+PASS: boundary case reaches signed max exactly | got=32767
+PASS: exact zero passes through relu | got=0
+PASS: bias can drive positive accumulator below zero | got=0
+tb_post_processing_unit PASSED
+tb/tb_post_processing_unit.sv:84: $finish called at 8000 (1ps)

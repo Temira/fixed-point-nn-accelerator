@@ -1,0 +1,13 @@
+mkdir -p build
+iverilog -g2012 -o build/tb_weight_bias_mem rtl/weight_bias_mem.sv tb/tb_weight_bias_mem.sv
+vvp build/tb_weight_bias_mem
+PASS: weight[0] | got=2
+PASS: weight[1] | got=-1
+PASS: weight[2] | got=0
+PASS: weight[4] | got=-3
+PASS: weight[7] | got=1
+PASS: bias[0] | got=1
+PASS: bias[1] | got=-2
+PASS: row-major flattening check | got=4
+tb_weight_bias_mem PASSED
+tb/tb_weight_bias_mem.sv:62: $finish called at 9000 (1ps)

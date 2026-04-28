@@ -7,7 +7,19 @@ This document provides a more detailed description of the system architecture fo
 ---
 
 ## System Block Diagram
-***(Need to add this!)
+
+```mermaid
+flowchart LR
+    PS["Processor / Testbench"] --> IN["Input Buffer"]
+    IN --> MAC["Compute Core / MAC Engine"]
+    MEM["Weight/Bias Memory"] --> MAC
+    MAC --> POST["Post-Processing Unit"]
+    POST --> OUT["Output Buffer"]
+    OUT --> PS
+    FSM["Control FSM"] --> IN
+    FSM --> MAC
+    FSM --> OUT
+```
 
 
 ---
@@ -54,6 +66,7 @@ Responsibilities:
 Design:
 - Single multiplier
 - Single accumulator
+- Two-stage pipelined organization: multiply then accumulate
 - Iterative over j
 
 ---
@@ -67,7 +80,8 @@ Applies:
 Responsibilities:
 - Add bias
 - Apply ReLU
-- Truncate result to output width
+- Saturate positive overflow to the output maximum
+- Truncate result to output width after clamping
 
 ---
 
@@ -78,8 +92,12 @@ Controls execution flow.
 States:
 - IDLE
 - LOAD_INPUT
-- COMPUTE
+- COMPUTE_RESET
+- COMPUTE_FEED
+- COMPUTE_DRAIN
+- POST_PROCESS
 - WRITE_OUTPUT
+- STREAM_OUTPUT
 - DONE
 
 Responsibilities:
@@ -152,3 +170,15 @@ This is appropriate for the project scope.
 - Isolated arithmetic blocks
 
 These choices enable effective unit testing and integration testing.
+
+---
+
+## Implementation Status
+
+- `rtl/input_buffer.sv`: implemented with unit test coverage
+- `rtl/weight_bias_mem.sv`: implemented with unit test coverage
+- `rtl/compute_core.sv`: implemented with unit test coverage
+- `rtl/post_processing_unit.sv`: implemented with unit test coverage
+- `rtl/controller_fsm.sv`: implemented with unit test coverage
+- `rtl/output_buffer.sv`: implemented with unit test coverage
+- `rtl/nn_accelerator.sv`: implemented with top-level integration test coverage

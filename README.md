@@ -1,110 +1,120 @@
 # Fixed-Point NN Accelerator
 
-A modular RTL implementation of a fixed-point neural network inference accelerator for a single fully connected layer with ReLU activation, verified in simulation against a Python golden model.
+This repository implements and documents a modular RTL accelerator for inference through a single fully connected neural-network layer using signed fixed-point arithmetic. The project is organized so a grader can read the design definition, inspect the module partitioning, and find verification and synthesis evidence without needing to execute the code.
 
-## Project Overview
+## What The IP Does
 
-This project implements a hardware IP block that computes inference for one dense neural-network layer:
+The accelerator computes one dense layer with ReLU activation:
 
-`y_i = max(0, sum_{j=0}^{N-1} W[i][j] * x[j] + b[i])`
+`y_i = max(0, sum_{j=0}^{N-1}(W[i][j] * x[j]) + b[i])`
 
-The design accepts one input vector at a time, performs fixed-point matrix-vector multiplication, adds bias, applies ReLU, and produces an output vector.
+The intended usage model is:
 
-The project is designed to emphasize:
-- modular RTL design
-- clear system interface behavior
-- unit and integration testing
-- reproducible verification against software reference results
+1. receive one input vector `x`
+2. store that vector in an input buffer
+3. reuse `x` across all output neurons
+4. multiply-accumulate against weights `W`
+5. add bias `b`
+6. apply ReLU and output-range clamping
+7. stream or read back the output vector `y`
 
-## Goals
+## Submission Map
 
-The main goals of this project are:
+- [`docs/interface.md`](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator/docs/interface.md): IP role, data flow, and planned PS/IP interface
+- [`docs/architecture.md`](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator/docs/architecture.md): module decomposition, block diagram, serial-MAC architecture choices
+- [`docs/verification.md`](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator/docs/verification.md): automated tests, golden-model comparison, and integration verification
+- [`results/simulation/module_results.md`](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator/results/simulation/module_results.md): simulation evidence page
+- [`results/synthesis/synthesis_summary.md`](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator/results/synthesis/synthesis_summary.md): synthesis evidence page
 
-1. Implement a well-defined hardware IP block for dense-layer inference
-2. Use signed fixed-point arithmetic throughout the datapath
-3. Build the design as modular subcomponents that can be tested independently
-4. Verify correctness using a Python golden model and RTL simulation
-5. Document the design clearly enough that another user can reproduce the results
+## IP Interface Definition
 
-## Design Scope
+### Current verification-level interface
 
-Current scope:
-- single fully connected layer
-- ReLU activation
-- inference only
-- simulation-only evaluation
-- signed fixed-point arithmetic
-- one input vector processed at a time
+The repository currently contains module-level, datapath-level, and integrated top-level RTL interfaces used for simulation:
 
-Out of scope:
-- training / backpropagation
-- floating-point arithmetic
-- multi-layer scheduling
-- FPGA deployment
-- DMA / host drivers / Linux integration
+- buffers use `write_en`, `write_addr`, `write_data`, `read_addr`, `read_data`
+- parameter memory uses `weight_addr`, `weight_data`, `bias_addr`, `bias_data`
+- post-processing uses `acc`, `bias`, `enabled`, `out_data`
+- compute core uses `mac_enable`, `acc_reset`, `x_data`, `w_data`, `mul_out`, `acc_out`
+- controller and top-level integration use `start`, `in_valid`, `in_ready`, `out_valid`, `busy`, and `done`
 
-## Top-Level Interface
+### Planned deployable system interface
 
-Planned top-level signals:
+The top-level accelerator is intended to be wrapped with:
 
-### Inputs
-- `clk` : system clock
-- `rst` : synchronous reset
-- `start` : begins a new inference operation
-- `in_valid` : indicates valid input data
-- `in_data[DATA_W-1:0]` : streamed input vector element
+- `AXI4-Stream` for input vector and output vector transport
+- `AXI4-Lite` for control and status registers such as `start`, `done`, and `busy`
 
-### Outputs
-- `in_ready` : accelerator ready to accept input
-- `out_valid` : output data is valid
-- `out_data[DATA_W-1:0]` : streamed output vector element
-- `busy` : accelerator is processing
-- `done` : inference operation complete
+That system-level message flow is documented in [`docs/interface.md`](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator/docs/interface.md).
 
-## Architecture
+## Architecture And Module Partitioning
 
-The accelerator is decomposed into the following modules:
+The design is explicitly partitioned into logical blocks:
 
-- **Input Buffer**  
-  Stores the input vector and provides indexed access during computation.
+- `rtl/input_buffer.sv`
+- `rtl/weight_bias_mem.sv`
+- `rtl/compute_core.sv`
+- `rtl/post_processing_unit.sv`
+- `rtl/controller_fsm.sv`
+- `rtl/output_buffer.sv`
+- `rtl/nn_accelerator.sv`
 
-- **Weight/Bias Memory**  
-  Stores the coefficient matrix and bias vector.
+The chosen architecture is a serial, time-multiplexed MAC datapath with a two-stage pipelined MAC core and an FSM-driven control path. That tradeoff reduces area and simplifies verification at the cost of latency. The architecture page explains how this partition supports unit testing, partial integration testing, and end-to-end top-level integration.
 
-- **MAC Engine**  
-  Performs signed fixed-point multiply-accumulate operations for one output neuron at a time.
+## Verification Strategy
 
-- **Bias + ReLU Unit**  
-  Adds bias and applies ReLU activation.
+The verification story is split into module-level checks, partial-datapath integration, control/compute verification, and end-to-end top-level evidence:
 
-- **Control FSM**  
-  Sequences input loading, computation, and output generation.
+### Module-level tests owned in this split
 
-- **Output Buffer**  
-  Stores completed results and handles output streaming.
+- `tb/tb_input_buffer.sv`
+- `tb/tb_weight_bias_mem.sv`
+- `tb/tb_compute_core.sv`
+- `tb/tb_post_processing_unit.sv`
+- `tb/tb_output_buffer.sv`
+- `tb/tb_datapath_partial.sv`
+- `tb/tb_controller_fsm.sv`
+- `tb/tb_nn_accelerator.sv`
 
-The architecture uses a **serial MAC datapath** to reduce implementation complexity and improve testability.
+### Golden-model reference
 
-## Arithmetic Format
+- `model/golden_model.py`
 
-Planned arithmetic format:
-- signed fixed-point
-- initial target: `Q8.8` using 16-bit data values
-- widened multiplication and accumulation
-- output truncation after bias addition and activation
+### Automated entry points
 
-This may be refined during implementation, but the key principle is that internal precision is expanded to reduce overflow risk during accumulation.
+The repository includes a [`Makefile`](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator/Makefile) with named targets for the Python golden model and each SystemVerilog testbench.
+
+If you want a single command for the full verification flow implemented in this repo, use [`scripts/run_all_tests.sh`](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator/scripts/run_all_tests.sh).
+
+## Current Evidence Status
+
+### Available now
+
+- RTL modules and matching testbenches for input buffering, parameter memory, compute, post-processing, control, output buffering, and top-level integration
+- deterministic memory preload vectors in `tb/test_vectors/`
+- Python golden model for dense-layer reference outputs
+- completed module-level, control-path, partial-datapath, and top-level simulation evidence in `results/simulation/module_results.md`
+- submission-facing markdown pages for synthesis evidence
+
+### Still required before final grading
+
+- copied synthesis/timing/resource summaries in `results/synthesis/synthesis_summary.md`
+- latency and throughput analysis against the initial serial-MAC design goals
+- synthesis and timing evidence for the integrated accelerator
 
 ## Repository Layout
 
 ```text
 .
 ├── README.md
-├── initial_plan.md
-├── detailed_plan.md
+├── Makefile
 ├── docs/
-├── rtl/
-├── tb/
 ├── model/
 ├── results/
-└── scripts/
+├── rtl/
+├── scripts/
+├── tb/
+├── initial_plan.md
+├── plan.md
+└── LICENSE
+```

@@ -1,0 +1,21 @@
+mkdir -p build
+iverilog -g2012 -o build/tb_input_buffer rtl/input_buffer.sv tb/tb_input_buffer.sv
+vvp build/tb_input_buffer
+PASS: reset clears addr 0 | got=0
+PASS: reset clears addr 1 | got=0
+PASS: reset clears addr 2 | got=0
+PASS: reset clears addr 3 | got=0
+PASS: reset clears addr 4 | got=0
+PASS: reset clears addr 5 | got=0
+PASS: reset clears addr 6 | got=0
+PASS: reset clears addr 7 | got=0
+PASS: read addr 7 | got=25
+PASS: read addr 0 | got=10
+PASS: read addr 1 | got=-3
+PASS: unwritten addr remains zero | got=0
+PASS: overwrite addr 1 | got=99
+PASS: other addr unaffected by overwrite | got=10
+PASS: second reset clears addr 0 | got=0
+PASS: second reset clears addr 1 | got=0
+tb_input_buffer PASSED
+tb/tb_input_buffer.sv:111: $finish called at 102000 (1ps)

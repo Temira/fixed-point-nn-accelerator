@@ -1,0 +1,11 @@
+mkdir -p build
+iverilog -g2012 -o build/tb_controller_fsm rtl/controller_fsm.sv tb/tb_controller_fsm.sv
+vvp build/tb_controller_fsm
+PASS: load_input pulse count | got=4
+PASS: mac_enable pulse count | got=8
+PASS: acc_reset pulse count | got=2
+PASS: post_enable pulse count | got=2
+PASS: write_output pulse count | got=2
+PASS: out_valid pulse count | got=2
+tb_controller_fsm PASSED
+tb/tb_controller_fsm.sv:137: $finish called at 275000 (1ps)

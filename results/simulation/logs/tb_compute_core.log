@@ -1,0 +1,10 @@
+mkdir -p build
+iverilog -g2012 -o build/tb_compute_core rtl/compute_core.sv tb/tb_compute_core.sv
+vvp build/tb_compute_core
+PASS: accumulator reset | got=0
+PASS: pipeline has not accumulated after first multiply | got=0
+PASS: accumulator includes first product | got=6
+PASS: accumulator includes second product | got=-2
+PASS: drain cycle adds final product | got=-7
+tb_compute_core PASSED
+tb/tb_compute_core.sv:95: $finish called at 75000 (1ps)
