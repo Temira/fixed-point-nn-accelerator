@@ -6,30 +6,30 @@ This page is the submission-facing location for synthesis evidence. The grader w
 
 | Item | Value |
 |---|---|
-| Tool version | Pending |
-| Target device / board | Pending |
-| Clock constraint | Pending |
-| Top module synthesized | Pending |
+| Tool version | 2018.3 |
+| Target device / board | xc7vx485tffg1157-1 |
+| Clock constraint | 10 ns (100 MHz) |
+| Top module synthesized | nn_accelerator |
 
 ## Resource Utilization
 
 | Metric | Value | Notes |
 |---|---|---|
-| LUTs | Pending | |
-| FFs | Pending | |
-| DSPs | Pending | |
-| BRAM | Pending | |
-| URAM | Pending | optional |
+| LUTs | 246 | |
+| FFs | 361 | |
+| DSPs | 1 | |
+| BRAM | 0 | |
+| URAM | 0 | optional |
 
 ## Performance Summary
 
 | Metric | Value | Notes |
 |---|---|---|
-| Achieved clock period | Pending | |
-| Fmax | Pending | |
-| Cycles per inference | `N + M * (N + 4) + M + 1` | implemented baseline controller estimate |
-| Latency per inference | Pending | compute as `cycles_per_inference * achieved_clock_period` |
-| Throughput | Pending | compute as `1 / latency_per_inference` in vectors/sec |
+| Achieved clock period | 7.447ns | |
+| Fmax | 134.3 MHz | |
+| Cycles per inference | `N + M * (N + 4) + M + 1` （23 cycles） | implemented baseline controller estimate |
+| Latency per inference | 171.3 ns | compute as `cycles_per_inference * achieved_clock_period` |
+| Throughput | 5.84 M vectors/sec | compute as `1 / latency_per_inference` in vectors/sec |
 
 For the currently verified reference case `N = 4`, `M = 2`, the implemented controller implies `23` cycles per inference before synthesis timing is applied.
 
