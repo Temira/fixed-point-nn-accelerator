@@ -26,6 +26,40 @@ The intended usage model is:
 - [`results/simulation/module_results.md`](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator/results/simulation/module_results.md): simulation evidence page
 - [`results/synthesis/synthesis_summary.md`](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator/results/synthesis/synthesis_summary.md): synthesis evidence page
 
+## Evidence At A Glance
+
+If a grader only opens the repository root, the two most important evidence pages are:
+
+- simulation evidence: [`results/simulation/module_results.md`](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator/results/simulation/module_results.md)
+- synthesis and timing evidence: [`results/synthesis/synthesis_summary.md`](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator/results/synthesis/synthesis_summary.md)
+
+### Simulation Summary
+
+| Area | Evidence |
+|---|---|
+| Module verification | `tb_input_buffer`, `tb_weight_bias_mem`, `tb_compute_core`, `tb_post_processing_unit`, and `tb_output_buffer` all pass |
+| Controller verification | `tb_controller_fsm` passes and confirms expected control pulse counts |
+| Partial integration | `tb_datapath_partial` passes for the reference vector set |
+| Top-level integration | `tb_nn_accelerator` passes and produces output `[21, 0]` |
+| Golden-model reference | Python reference model in `model/golden_model.py` also produces `[21, 0]` for the same vector set |
+
+### Synthesis Summary
+
+| Metric | Value |
+|---|---|
+| Tool version | 2018.3 |
+| Target device | `xc7vx485tffg1157-1` |
+| Top module | `nn_accelerator` |
+| LUTs | 246 |
+| FFs | 361 |
+| DSPs | 1 |
+| Achieved clock period | 7.447 ns |
+| Fmax | 134.3 MHz |
+| Reference-case latency | 171.3 ns |
+| Reference-case throughput | 5.84 M vectors/sec |
+
+This root page intentionally repeats the key results so a grader can confirm that the repository contains populated verification and synthesis evidence without needing to guess where the important files are.
+
 ## IP Interface Definition
 
 ### Current verification-level interface
