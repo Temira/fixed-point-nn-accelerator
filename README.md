@@ -28,7 +28,7 @@ The intended usage model is:
 
 ## Evidence At A Glance
 
-If a grader only opens the repository root, the two most important evidence pages are:
+The two most important evidence pages are:
 
 - simulation evidence: [`results/simulation/module_results.md`](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator/results/simulation/module_results.md)
 - synthesis and timing evidence: [`results/synthesis/synthesis_summary.md`](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator/results/synthesis/synthesis_summary.md)
