@@ -69,6 +69,10 @@ Design:
 - Two-stage pipelined organization: multiply then accumulate
 - Iterative over j
 
+Relevant RTL:
+- multiply-stage register and valid tracking: [compute_core.sv](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator-latest/rtl/compute_core.sv:16)
+- accumulator update from the prior-cycle multiply result: [compute_core.sv](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator-latest/rtl/compute_core.sv:30)
+
 ---
 
 ### 4. Bias + ReLU Unit
@@ -104,6 +108,12 @@ Responsibilities:
 - Manage indices (i, j)
 - Control data movement
 - Generate control signals
+
+Relevant RTL:
+- state encoding and controller registers: [controller_fsm.sv](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator-latest/rtl/controller_fsm.sv:30)
+- load-input scheduling: [controller_fsm.sv](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator-latest/rtl/controller_fsm.sv:104)
+- compute/reset/drain/post/write sequencing: [controller_fsm.sv](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator-latest/rtl/controller_fsm.sv:119)
+- output streaming and done pulse: [controller_fsm.sv](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator-latest/rtl/controller_fsm.sv:155)
 
 ---
 
@@ -147,6 +157,8 @@ This gives the baseline estimate:
 `cycles_per_inference = N + M * (N + 4) + M + 1`
 
 For the currently verified test configuration with `N = 4` and `M = 2`, this evaluates to `23` cycles per inference.
+
+The cycle model follows directly from the implemented controller schedule in [controller_fsm.sv](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator-latest/rtl/controller_fsm.sv:104) through [controller_fsm.sv](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator-latest/rtl/controller_fsm.sv:166).
 
 ---
 

@@ -61,6 +61,12 @@ The design is explicitly partitioned into logical blocks:
 
 The chosen architecture is a serial, time-multiplexed MAC datapath with a two-stage pipelined MAC core and an FSM-driven control path. That tradeoff reduces area and simplifies verification at the cost of latency. The architecture page explains how this partition supports unit testing, partial integration testing, and end-to-end top-level integration.
 
+Key RTL anchors for these claims are:
+
+- the two-stage MAC behavior in [compute_core.sv](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator-latest/rtl/compute_core.sv:20)
+- the controller state machine and scheduling logic in [controller_fsm.sv](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator-latest/rtl/controller_fsm.sv:30)
+- the top-level datapath/control integration in [nn_accelerator.sv](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator-latest/rtl/nn_accelerator.sv:45)
+
 ## Efficiency Tradeoffs
 
 The implementation makes the area/throughput tradeoff explicit rather than hiding it:
@@ -69,6 +75,12 @@ The implementation makes the area/throughput tradeoff explicit rather than hidin
 - one accumulator is reused across all output neurons
 - the compute path is pipelined into multiply and accumulate stages to shorten the critical combinational path
 - the controller sequences work serially, which increases latency but keeps the datapath compact
+
+These are visible directly in the RTL:
+
+- `mul_reg` and `mul_valid` implement the pipelined multiply stage in [compute_core.sv](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator-latest/rtl/compute_core.sv:16)
+- the accumulator update that consumes the prior-cycle multiplication result appears in [compute_core.sv](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator-latest/rtl/compute_core.sv:30)
+- the serial scheduling over input and output indices appears in [controller_fsm.sv](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator-latest/rtl/controller_fsm.sv:104) and [controller_fsm.sv](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator-latest/rtl/controller_fsm.sv:119)
 
 For the current baseline controller in [`rtl/controller_fsm.sv`](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator/rtl/controller_fsm.sv), the cycle budget is:
 
@@ -120,13 +132,11 @@ If you want a single command for the full verification flow implemented in this 
 - deterministic memory preload vectors in `tb/test_vectors/`
 - Python golden model for dense-layer reference outputs
 - completed module-level, control-path, partial-datapath, and top-level simulation evidence in `results/simulation/module_results.md`
-- submission-facing markdown pages for synthesis evidence
+- completed synthesis and timing evidence in `results/synthesis/synthesis_summary.md`
 
 ### Still required before final grading
 
-- copied synthesis/timing/resource summaries in `results/synthesis/synthesis_summary.md`
-- latency and throughput analysis against the initial serial-MAC design goals
-- synthesis and timing evidence for the integrated accelerator
+- final report screenshots or exported report snippets, if required by the course submission format
 
 ## Repository Layout
 

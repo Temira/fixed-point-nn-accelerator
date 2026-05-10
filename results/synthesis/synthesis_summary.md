@@ -50,9 +50,11 @@ For the verified reference case:
 
 **Breakdown of cycle formula:**
 - `N`: input loading
-- `M(N + 4)`: MAC operations plus pipeline overhead per output neuron
-- `M`: bias addition and ReLU activation
-- `+1`: final output stage
+- `M(N + 4)`: reset, MAC feed, drain, post-process, and writeback work per output neuron
+- `M`: output streaming
+- `+1`: final completion stage
+
+The controller schedule that drives this cycle model is implemented in [controller_fsm.sv](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator-latest/rtl/controller_fsm.sv:104), and the reused pipelined MAC datapath is implemented in [compute_core.sv](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator-latest/rtl/compute_core.sv:20).
 
 ---
 

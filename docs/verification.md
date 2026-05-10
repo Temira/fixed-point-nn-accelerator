@@ -68,6 +68,12 @@ Even before post-synthesis timing is available, the current RTL already shows th
 - the compute core uses a two-stage pipeline, so multiplication and accumulation are separated across cycles
 - only one MAC datapath is instantiated, so hardware is reused across all outputs rather than replicated
 
+These claims can be checked directly in the RTL:
+
+- MAC pipeline registers and accumulation behavior: [compute_core.sv](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator-latest/rtl/compute_core.sv:16)
+- controller state sequencing and pulse generation: [controller_fsm.sv](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator-latest/rtl/controller_fsm.sv:93)
+- top-level binding of controller, compute core, post-processing, and buffers: [nn_accelerator.sv](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator-latest/rtl/nn_accelerator.sv:45)
+
 For the current baseline controller, the estimated cycle count per inference is:
 
 `cycles_per_inference = N + M * (N + 4) + M + 1`
@@ -81,8 +87,7 @@ The grader will not run the repo, so the following markdown pages are the primar
 - [`results/simulation/module_results.md`](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator/results/simulation/module_results.md)
 - [`results/synthesis/synthesis_summary.md`](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator/results/synthesis/synthesis_summary.md)
 
-## What Still Needs To Be Filled In
+## Remaining Submission Items
 
-- timing and cycle-count analysis summarized from the implemented controller and compute pipeline
-- post-synthesis latency, throughput, and resource utilization tables
-- brief analysis comparing those measured values against initial design goals
+- final report screenshots or exported synthesis/timing report snippets, if required by the course submission format
+- any optional larger-dimension experiments beyond the verified `N = 4`, `M = 2` reference case
