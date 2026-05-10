@@ -1,6 +1,8 @@
 # Synthesis Summary
 
-This page is the submission-facing location for synthesis evidence. The grader will look for explicit latency, throughput, and resource data here.
+This page provides synthesis results and performance analysis for the implemented neural network accelerator. It includes latency, throughput, and resource utilization, along with interpretation relative to design goals.
+
+---
 
 ## Build Context
 
@@ -11,39 +13,68 @@ This page is the submission-facing location for synthesis evidence. The grader w
 | Clock constraint | 10 ns (100 MHz) |
 | Top module synthesized | nn_accelerator |
 
+---
+
 ## Resource Utilization
 
 | Metric | Value | Notes |
 |---|---|---|
 | LUTs | 246 | |
 | FFs | 361 | |
-| DSPs | 1 | |
+| DSPs | 1 | Single MAC datapath reused |
 | BRAM | 0 | |
 | URAM | 0 | optional |
+
+**Interpretation:**  
+The use of a single DSP confirms the intended serialized MAC architecture, where one multiply-accumulate unit is reused across all computations. This minimizes hardware usage at the cost of increased latency.
+
+---
 
 ## Performance Summary
 
 | Metric | Value | Notes |
 |---|---|---|
-| Achieved clock period | 7.447ns | |
+| Achieved clock period | 7.447 ns | |
 | Fmax | 134.3 MHz | |
-| Cycles per inference | `N + M * (N + 4) + M + 1` （23 cycles） | implemented baseline controller estimate |
-| Latency per inference | 171.3 ns | compute as `cycles_per_inference * achieved_clock_period` |
-| Throughput | 5.84 M vectors/sec | compute as `1 / latency_per_inference` in vectors/sec |
+| Cycles per inference | `N + M * (N + 4) + M + 1` (23 cycles) | derived from controller FSM schedule |
+| Latency per inference | 171.3 ns | computed as `cycles × clock period` |
+| Throughput | 5.84 M vectors/sec | computed as `1 / latency` |
 
-For the currently verified reference case `N = 4`, `M = 2`, the implemented controller implies `23` cycles per inference before synthesis timing is applied.
+For the verified reference case:
+
+- \( N = 4 \), \( M = 2 \)
+- cycles = 4 + 2*(4 + 4) + 2 + 1 = 23
+- latency = 23 × 7.447 ns = 171.3 ns
+- throughput = 1 / 171.3 ns ≈ 5.84 M vectors/sec
+
+
+**Breakdown of cycle formula:**
+- `N`: input loading
+- `M(N + 4)`: MAC operations plus pipeline overhead per output neuron
+- `M`: bias addition and ReLU activation
+- `+1`: final output stage
+
+---
 
 ## Analysis Against Initial Goals
 
-| Goal | Measured result | Met? | Discussion |
+| Goal | Measured Result | Met? | Discussion |
 |---|---|---|---|
-| Correct dense-layer datapath behavior | Pending | Pending | |
-| Modular implementation | Pending | Pending | |
-| Resource-efficient serial MAC architecture | Pending synthesis numbers | Pending | The RTL uses a single reused MAC datapath with a two-stage pipeline, so the qualitative area/throughput tradeoff is already established; synthesis is still needed for quantitative LUT/FF/DSP/BRAM evidence. |
-| Reproducible verification flow | Pending | Pending | |
+| Correct dense-layer datapath behavior | Verified for N=4, M=2 case | Yes | Outputs match Python golden model |
+| Modular implementation | Separate RTL modules (MAC, controller, buffers) | Yes | Supports reuse and clean integration |
+| Resource-efficient serial MAC architecture | 1 DSP, low LUT/FF count | Yes | Confirms serialized datapath design |
+| Reproducible verification flow | SystemVerilog testbench + Python model | Yes | Deterministic and repeatable validation |
+
+---
+
+## Conclusion
+
+The synthesized design meets the intended goal of minimizing hardware usage through a serialized MAC architecture, as evidenced by the use of a single DSP and low overall resource utilization. This design achieves reasonable throughput for small problem sizes while maintaining a simple and modular structure suitable for SoC-style integration. Higher performance targets would require increased parallelism.
+
+---
 
 ## Required Final Attachments
 
-- synthesis report screenshot or pasted summary table
-- timing summary screenshot or pasted slack/Fmax numbers
-- short paragraph interpreting whether the serial architecture met the intended tradeoff
+- synthesis report screenshot or pasted summary table  
+- timing summary screenshot or pasted slack/Fmax numbers  
+- short paragraph interpreting whether the serial architecture met the intended tradeoff  
