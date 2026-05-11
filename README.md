@@ -171,17 +171,11 @@ If you want a single command for the full verification flow implemented in this 
 
 ## Current Evidence Status
 
-### Available now
-
 - RTL modules and matching testbenches for input buffering, parameter memory, compute, post-processing, control, output buffering, and top-level integration
 - deterministic memory preload vectors in `tb/test_vectors/`
 - Python golden model for dense-layer reference outputs
 - completed module-level, control-path, partial-datapath, and top-level simulation evidence in `results/simulation/module_results.md`
 - completed synthesis and timing evidence in `results/synthesis/synthesis_summary.md`
-
-### Still required before final grading
-
-- final report screenshots or exported report snippets, if required by the course submission format
 
 ## Repository Layout
 
