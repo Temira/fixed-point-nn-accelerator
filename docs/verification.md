@@ -82,13 +82,8 @@ For the verified test configuration `N = 4`, `M = 2`, this gives `23` cycles per
 
 ## Evidence Files Expected Before Final Submission
 
-The grader will not run the repo, so the following markdown pages are the primary submission-facing evidence locations:
+The following markdown pages are the primary submission-facing evidence locations:
 
 - [results/simulation/module_results.md](../results/simulation/module_results.md)
 - [results/synthesis/synthesis_summary.md](../results/synthesis/synthesis_summary.md)
 - [results/index.md](../results/index.md)
-
-## Remaining Submission Items
-
-- final report screenshots or exported synthesis/timing report snippets, if required by the course submission format
-- any optional larger-dimension experiments beyond the verified `N = 4`, `M = 2` reference case
