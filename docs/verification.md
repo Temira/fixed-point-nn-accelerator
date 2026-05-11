@@ -6,7 +6,7 @@ This repository now includes verification for the module-level datapath blocks, 
 
 ## Automated Test Entry Points
 
-The repository includes a [`Makefile`](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator/Makefile) so module tests can be run consistently:
+The repository includes a [Makefile](../Makefile) so module tests can be run consistently:
 
 - `make golden`
 - `make test-input-buffer`
@@ -18,7 +18,7 @@ The repository includes a [`Makefile`](/Users/temirakoenig/Documents/Codex/2026-
 - `make test-controller-fsm`
 - `make test-top-level`
 
-For a one-shot run of the owned verification flow, use [`scripts/run_all_tests.sh`](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator/scripts/run_all_tests.sh).
+For a one-shot run of the owned verification flow, use [scripts/run_all_tests.sh](../scripts/run_all_tests.sh).
 
 ## Module-Level Verification Matrix
 
@@ -33,7 +33,7 @@ For a one-shot run of the owned verification flow, use [`scripts/run_all_tests.s
 
 ## Partial Datapath Verification
 
-[`tb/tb_datapath_partial.sv`](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator/tb/tb_datapath_partial.sv) provides an integration-oriented check across the modules owned in this split:
+[tb/tb_datapath_partial.sv](../tb/tb_datapath_partial.sv) provides an integration-oriented check across the modules owned in this split:
 
 1. load a known input vector into `input_buffer`
 2. read deterministic parameters from `weight_bias_mem`
@@ -50,7 +50,7 @@ For the included test vectors, the golden-model output is:
 
 ## Top-Level Integration Verification
 
-[`tb/tb_nn_accelerator.sv`](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator/tb/tb_nn_accelerator.sv) verifies the full implemented accelerator path:
+[tb/tb_nn_accelerator.sv](../tb/tb_nn_accelerator.sv) verifies the full implemented accelerator path:
 
 1. assert `start`
 2. stream in one input vector through the top-level interface
@@ -70,9 +70,9 @@ Even before post-synthesis timing is available, the current RTL already shows th
 
 These claims can be checked directly in the RTL:
 
-- MAC pipeline registers and accumulation behavior: [compute_core.sv](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator-latest/rtl/compute_core.sv:16)
-- controller state sequencing and pulse generation: [controller_fsm.sv](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator-latest/rtl/controller_fsm.sv:93)
-- top-level binding of controller, compute core, post-processing, and buffers: [nn_accelerator.sv](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator-latest/rtl/nn_accelerator.sv:45)
+- MAC pipeline registers and accumulation behavior: [compute_core.sv](../rtl/compute_core.sv#L16)
+- controller state sequencing and pulse generation: [controller_fsm.sv](../rtl/controller_fsm.sv#L93)
+- top-level binding of controller, compute core, post-processing, and buffers: [nn_accelerator.sv](../rtl/nn_accelerator.sv#L45)
 
 For the current baseline controller, the estimated cycle count per inference is:
 
@@ -84,8 +84,9 @@ For the verified test configuration `N = 4`, `M = 2`, this gives `23` cycles per
 
 The grader will not run the repo, so the following markdown pages are the primary submission-facing evidence locations:
 
-- [`results/simulation/module_results.md`](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator/results/simulation/module_results.md)
-- [`results/synthesis/synthesis_summary.md`](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator/results/synthesis/synthesis_summary.md)
+- [results/simulation/module_results.md](../results/simulation/module_results.md)
+- [results/synthesis/synthesis_summary.md](../results/synthesis/synthesis_summary.md)
+- [results/index.md](../results/index.md)
 
 ## Remaining Submission Items
 

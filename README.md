@@ -2,6 +2,13 @@
 
 This repository implements and documents a modular RTL accelerator for inference through a single fully connected neural-network layer using signed fixed-point arithmetic. The project is organized so a grader can read the design definition, inspect the module partitioning, and find verification and synthesis evidence without needing to execute the code.
 
+## Project Team
+
+- Temira Koenig
+- Zihao Zhang
+
+The original project outline is included in [initial_plan.md](initial_plan.md).
+
 ## What The IP Does
 
 The accelerator computes one dense layer with ReLU activation:
@@ -20,18 +27,22 @@ The intended usage model is:
 
 ## Submission Map
 
-- [`docs/interface.md`](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator/docs/interface.md): IP role, data flow, and planned PS/IP interface
-- [`docs/architecture.md`](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator/docs/architecture.md): module decomposition, block diagram, serial-MAC architecture choices
-- [`docs/verification.md`](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator/docs/verification.md): automated tests, golden-model comparison, and integration verification
-- [`results/simulation/module_results.md`](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator/results/simulation/module_results.md): simulation evidence page
-- [`results/synthesis/synthesis_summary.md`](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator/results/synthesis/synthesis_summary.md): synthesis evidence page
+- [docs/interface.md](docs/interface.md): IP role, data flow, and planned PS/IP interface
+- [docs/architecture.md](docs/architecture.md): module decomposition, block diagram, serial-MAC architecture choices
+- [docs/verification.md](docs/verification.md): automated tests, golden-model comparison, and integration verification
+- [initial_plan.md](initial_plan.md): original project outline
+- [detailed_plan.md](detailed_plan.md): final implementation-oriented design summary
+- [presentation.md](presentation.md): presentation-style summary of the problem, design, and key results
+- [results/index.md](results/index.md): results landing page
+- [results/simulation/module_results.md](results/simulation/module_results.md): simulation evidence page
+- [results/synthesis/synthesis_summary.md](results/synthesis/synthesis_summary.md): synthesis evidence page
 
 ## Evidence At A Glance
 
 The two most important evidence pages are:
 
-- simulation evidence: [`results/simulation/module_results.md`](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator/results/simulation/module_results.md)
-- synthesis and timing evidence: [`results/synthesis/synthesis_summary.md`](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator/results/synthesis/synthesis_summary.md)
+- simulation evidence: [results/simulation/module_results.md](results/simulation/module_results.md)
+- synthesis and timing evidence: [results/synthesis/synthesis_summary.md](results/synthesis/synthesis_summary.md)
 
 ### Simulation Summary
 
@@ -79,7 +90,7 @@ The top-level accelerator is intended to be wrapped with:
 - `AXI4-Stream` for input vector and output vector transport
 - `AXI4-Lite` for control and status registers such as `start`, `done`, and `busy`
 
-That system-level message flow is documented in [`docs/interface.md`](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator/docs/interface.md).
+That system-level message flow is documented in [docs/interface.md](docs/interface.md).
 
 ## Architecture And Module Partitioning
 
@@ -97,9 +108,9 @@ The chosen architecture is a serial, time-multiplexed MAC datapath with a two-st
 
 Key RTL anchors for these claims are:
 
-- the two-stage MAC behavior in [compute_core.sv](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator-latest/rtl/compute_core.sv:20)
-- the controller state machine and scheduling logic in [controller_fsm.sv](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator-latest/rtl/controller_fsm.sv:30)
-- the top-level datapath/control integration in [nn_accelerator.sv](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator-latest/rtl/nn_accelerator.sv:45)
+- the two-stage MAC behavior in [compute_core.sv](rtl/compute_core.sv#L20)
+- the controller state machine and scheduling logic in [controller_fsm.sv](rtl/controller_fsm.sv#L30)
+- the top-level datapath/control integration in [nn_accelerator.sv](rtl/nn_accelerator.sv#L45)
 
 ## Efficiency Tradeoffs
 
@@ -112,11 +123,11 @@ The implementation makes the area/throughput tradeoff explicit rather than hidin
 
 These are visible directly in the RTL:
 
-- `mul_reg` and `mul_valid` implement the pipelined multiply stage in [compute_core.sv](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator-latest/rtl/compute_core.sv:16)
-- the accumulator update that consumes the prior-cycle multiplication result appears in [compute_core.sv](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator-latest/rtl/compute_core.sv:30)
-- the serial scheduling over input and output indices appears in [controller_fsm.sv](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator-latest/rtl/controller_fsm.sv:104) and [controller_fsm.sv](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator-latest/rtl/controller_fsm.sv:119)
+- `mul_reg` and `mul_valid` implement the pipelined multiply stage in [compute_core.sv](rtl/compute_core.sv#L16)
+- the accumulator update that consumes the prior-cycle multiplication result appears in [compute_core.sv](rtl/compute_core.sv#L30)
+- the serial scheduling over input and output indices appears in [controller_fsm.sv](rtl/controller_fsm.sv#L104) and [controller_fsm.sv](rtl/controller_fsm.sv#L119)
 
-For the current baseline controller in [`rtl/controller_fsm.sv`](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator/rtl/controller_fsm.sv), the cycle budget is:
+For the current baseline controller in [rtl/controller_fsm.sv](rtl/controller_fsm.sv), the cycle budget is:
 
 - input load: `N` cycles
 - per output neuron: `1` reset + `N` feed cycles + `1` drain + `1` post-process + `1` writeback = `N + 4` cycles
@@ -154,9 +165,9 @@ The verification story is split into module-level checks, partial-datapath integ
 
 ### Automated entry points
 
-The repository includes a [`Makefile`](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator/Makefile) with named targets for the Python golden model and each SystemVerilog testbench.
+The repository includes a [Makefile](Makefile) with named targets for the Python golden model and each SystemVerilog testbench.
 
-If you want a single command for the full verification flow implemented in this repo, use [`scripts/run_all_tests.sh`](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator/scripts/run_all_tests.sh).
+If you want a single command for the full verification flow implemented in this repo, use [scripts/run_all_tests.sh](scripts/run_all_tests.sh).
 
 ## Current Evidence Status
 

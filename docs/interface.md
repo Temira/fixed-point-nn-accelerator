@@ -73,3 +73,9 @@ The intended deployable top-level IP uses a standard control/data split:
 5. Post-processing adds bias, applies ReLU, and clamps overflow.
 6. Output buffer stores results and streams `M` outputs back to the processor.
 7. Accelerator asserts `done` and returns to idle.
+
+## Related Files
+
+- original outline: [../initial_plan.md](../initial_plan.md)
+- final implementation summary: [../detailed_plan.md](../detailed_plan.md)
+- top-level RTL: [../rtl/nn_accelerator.sv](../rtl/nn_accelerator.sv)

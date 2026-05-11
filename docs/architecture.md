@@ -70,8 +70,8 @@ Design:
 - Iterative over j
 
 Relevant RTL:
-- multiply-stage register and valid tracking: [compute_core.sv](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator-latest/rtl/compute_core.sv:16)
-- accumulator update from the prior-cycle multiply result: [compute_core.sv](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator-latest/rtl/compute_core.sv:30)
+- multiply-stage register and valid tracking: [compute_core.sv](../rtl/compute_core.sv#L16)
+- accumulator update from the prior-cycle multiply result: [compute_core.sv](../rtl/compute_core.sv#L30)
 
 ---
 
@@ -110,10 +110,10 @@ Responsibilities:
 - Generate control signals
 
 Relevant RTL:
-- state encoding and controller registers: [controller_fsm.sv](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator-latest/rtl/controller_fsm.sv:30)
-- load-input scheduling: [controller_fsm.sv](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator-latest/rtl/controller_fsm.sv:104)
-- compute/reset/drain/post/write sequencing: [controller_fsm.sv](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator-latest/rtl/controller_fsm.sv:119)
-- output streaming and done pulse: [controller_fsm.sv](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator-latest/rtl/controller_fsm.sv:155)
+- state encoding and controller registers: [controller_fsm.sv](../rtl/controller_fsm.sv#L30)
+- load-input scheduling: [controller_fsm.sv](../rtl/controller_fsm.sv#L104)
+- compute/reset/drain/post/write sequencing: [controller_fsm.sv](../rtl/controller_fsm.sv#L119)
+- output streaming and done pulse: [controller_fsm.sv](../rtl/controller_fsm.sv#L155)
 
 ---
 
@@ -158,7 +158,7 @@ This gives the baseline estimate:
 
 For the currently verified test configuration with `N = 4` and `M = 2`, this evaluates to `23` cycles per inference.
 
-The cycle model follows directly from the implemented controller schedule in [controller_fsm.sv](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator-latest/rtl/controller_fsm.sv:104) through [controller_fsm.sv](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator-latest/rtl/controller_fsm.sv:166).
+The cycle model follows directly from the implemented controller schedule in [controller_fsm.sv](../rtl/controller_fsm.sv#L104) through [controller_fsm.sv](../rtl/controller_fsm.sv#L166).
 
 ---
 

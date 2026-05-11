@@ -1,5 +1,10 @@
 # Initial Plan — Fixed-Point NN Accelerator
 
+## Project Team
+
+- Temira Koenig
+- Zihao Zhang
+
 ## 1. IP Definition
 
 ### Overview
@@ -24,6 +29,13 @@ The IP performs the following steps:
 4. Adds bias
 5. Applies ReLU activation
 6. Outputs the result vector `y`
+
+### Why This Is Well-Suited For Hardware Acceleration
+
+- Dense-layer inference is dominated by repeated multiply-accumulate operations, which map naturally to DSP-backed hardware datapaths.
+- The computation pattern is deterministic, with fixed nested loops over input and output indices.
+- The same input vector is reused across multiple output neurons, which makes buffering and datapath reuse effective.
+- The workload can be implemented first as a compact serial MAC engine and later extended toward greater parallelism if higher throughput is needed.
 
 ---
 

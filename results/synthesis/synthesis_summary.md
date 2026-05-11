@@ -54,7 +54,7 @@ For the verified reference case:
 - `M`: output streaming
 - `+1`: final completion stage
 
-The controller schedule that drives this cycle model is implemented in [controller_fsm.sv](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator-latest/rtl/controller_fsm.sv:104), and the reused pipelined MAC datapath is implemented in [compute_core.sv](/Users/temirakoenig/Documents/Codex/2026-04-28/github-plugin-github-openai-curated-help-2/fixed-point-nn-accelerator-latest/rtl/compute_core.sv:20).
+The controller schedule that drives this cycle model is implemented in [controller_fsm.sv](../../rtl/controller_fsm.sv#L104), and the reused pipelined MAC datapath is implemented in [compute_core.sv](../../rtl/compute_core.sv#L20).
 
 ---
 
