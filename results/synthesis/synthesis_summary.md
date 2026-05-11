@@ -71,12 +71,4 @@ The controller schedule that drives this cycle model is implemented in [controll
 
 ## Conclusion
 
-The synthesized design meets the intended goal of minimizing hardware usage through a serialized MAC architecture, as evidenced by the use of a single DSP and low overall resource utilization. This design achieves reasonable throughput for small problem sizes while maintaining a simple and modular structure suitable for SoC-style integration. Higher performance targets would require increased parallelism.
-
----
-
-## Required Final Attachments
-
-- synthesis report screenshot or pasted summary table  
-- timing summary screenshot or pasted slack/Fmax numbers  
-- short paragraph interpreting whether the serial architecture met the intended tradeoff  
+The synthesized design meets the intended goal of minimizing hardware usage through a serialized MAC architecture, as evidenced by the use of a single DSP and low overall resource utilization. This design achieves reasonable throughput for small problem sizes while maintaining a simple and modular structure suitable for SoC-style integration. Higher performance targets would require increased parallelism.  
