@@ -25,6 +25,9 @@ The intended usage model is:
 6. apply ReLU and output-range clamping
 7. stream or read back the output vector `y`
 
+## Video Presentation
+- [Link](presentation/video.md) to recorded presentation on YouTube
+
 ## Submission Map
 
 - [docs/interface.md](docs/interface.md): IP role, data flow, and planned PS/IP interface
@@ -36,6 +39,7 @@ The intended usage model is:
 - [results/index.md](results/index.md): results landing page
 - [results/simulation/module_results.md](results/simulation/module_results.md): simulation evidence page
 - [results/synthesis/synthesis_summary.md](results/synthesis/synthesis_summary.md): synthesis evidence page
+- [presentation/video.md](presentation/video.md): link to YouTube video
 
 ## Evidence At A Glance
 
@@ -185,6 +189,7 @@ If you want a single command for the full verification flow implemented in this 
 ├── Makefile
 ├── docs/
 ├── model/
+├── presentation/
 ├── results/
 ├── rtl/
 ├── scripts/
